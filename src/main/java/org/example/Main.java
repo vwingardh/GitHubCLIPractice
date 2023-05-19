@@ -12,7 +12,9 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        System.out.println(getInformation());
+        String commandLineArgument = args[0];
+        String jsonStream = getInformation();
+        printJSON(commandLineArgument, jsonStream);
     }
 
     public static String getInformation() throws IOException {
@@ -48,8 +50,15 @@ public class Main {
         bufferedWriter.close();
 
         BufferedReader bufferedReader = Files.newBufferedReader(path, StandardCharsets.UTF_8);
-        System.out.println(bufferedReader.readLine());
 
-        return json.toString(); // return JSON string to main
+        return jsonString; // return JSON string to main
+    }
+
+    public static void printJSON(String command, String jsonStream) {
+        System.out.println(command);
+        System.out.println(jsonStream);
+        if (command == "print") {
+            System.out.println(jsonStream);
+        }
     }
 }
