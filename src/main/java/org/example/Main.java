@@ -1,14 +1,21 @@
 package org.example;
 
 import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         System.out.println(getInformation());
     }
 
-    public static String getInformation() {
+    public static String getInformation() throws IOException {
         JSONObject json = new JSONObject(); // Create a JSON object
         Scanner scan = new Scanner(System.in);  // Create a Scanner object
 
@@ -25,6 +32,23 @@ public class Main {
         json.put("age", userAge);
 
         scan.close(); // Close scanner
+
+        String jsonString = json.toString();
+
+        final String ABSOLUTE_JSON_FILE_PATH = "/Users/vanessa/salt-labs/githubCommand/src/main/resources/personData.json";
+        Path path = Path.of(ABSOLUTE_JSON_FILE_PATH);
+
+        if (!Files.exists(path)) {
+            Files.createFile(path);
+        }
+
+        OutputStream bufferedWriter = Files.newOutputStream(path);
+        bufferedWriter.write(jsonString.getBytes());
+        bufferedWriter.flush();
+        bufferedWriter.close();
+
+        BufferedReader bufferedReader = Files.newBufferedReader(path, StandardCharsets.UTF_8);
+        System.out.println(bufferedReader.readLine());
 
         return json.toString(); // return JSON string to main
     }
